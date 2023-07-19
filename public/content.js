@@ -16,6 +16,8 @@ customButton.style.transform = "translate(-50%, -50%)";
 document.body.appendChild(customButton);
 
 let shortcutContainer; // Déclarer la variable en dehors de la portée de la fonction click
+let isDraggingShortcut;
+
 
 customButton.addEventListener("click", () => {
     if (document.getElementById("rectangle")) {
@@ -26,6 +28,7 @@ customButton.addEventListener("click", () => {
         rectangle.style.position = "absolute";
         rectangle.style.width = "200px";
         rectangle.style.height = "300px";
+        rectangle.style.overflow = "auto";
         rectangle.style.padding = "10px";
         rectangle.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
         rectangle.style.display = "flex";
@@ -107,17 +110,65 @@ customButton.addEventListener("click", () => {
         addShortcut.style.padding = "5px 10px";
         addShortcut.addEventListener("click", () => {
             if (shortcutContainer.children.length < 5) {
-                const shortcutName = prompt("Veuillez donner un nom :");
-                const value = textarea.value;
-            
-                const newShortcut = createShortcutElement(shortcutName, value);
-                const listItem = createListItemElement(newShortcut);
-                shortcutContainer.appendChild(listItem);
-                saveShortcuts(shortcutContainer);
+                const addShortcutContainer = document.createElement("div");
+                addShortcutContainer.style.display = "flex";
+                addShortcutContainer.style.flexDirection = "column";
+                addShortcutContainer.style.gap = "10px";
+                addShortcutContainer.style.alignItems = "center";
+
+                const nameInput = document.createElement("input");
+                nameInput.type = "text";
+                nameInput.style.color = "black";
+                nameInput.placeholder = "Enter a name";
+                nameInput.style.width = "180px";
+                nameInput.style.marginTop = "10px";
+                addShortcutContainer.appendChild(nameInput);
+
+                const buttonContainer = document.createElement("div");
+                buttonContainer.style.display = "flex";
+                buttonContainer.style.gap = "10px";
+
+                const cancelButton = document.createElement("button");
+                cancelButton.innerText = "Cancel";
+                cancelButton.style.width = "80px";
+                cancelButton.style.backgroundColor = "gray";
+                cancelButton.style.color = "white";
+                cancelButton.style.borderRadius = "20px";
+                cancelButton.style.padding = "5px 10px";
+                cancelButton.addEventListener("click", () => {
+                    addShortcutContainer.remove();
+                });
+                buttonContainer.appendChild(cancelButton);
+
+                const confirmButton = document.createElement("button");
+                confirmButton.innerText = "Confirm";
+                confirmButton.style.backgroundColor = "gray";
+                confirmButton.style.color = "white";
+                confirmButton.style.width = "80px";
+                confirmButton.style.borderRadius = "20px";
+                confirmButton.style.padding = "5px 10px";
+                confirmButton.addEventListener("click", () => {
+                    const shortcutName = nameInput.value;
+                    const value = textarea.value;
+                    if (shortcutName !== "") {
+                        const newShortcut = createShortcutElement(shortcutName, value);
+                        const listItem = createListItemElement(newShortcut);
+                        shortcutContainer.appendChild(listItem);
+                        saveShortcuts(shortcutContainer);
+                        addShortcutContainer.remove();
+                    } else {
+                        alert("Please enter a name for the shortcut.");
+                    }
+                });
+                buttonContainer.appendChild(confirmButton);
+
+                addShortcutContainer.appendChild(buttonContainer);
+
+                rectangle.appendChild(addShortcutContainer);
             } else {
                 alert("Vous avez atteint la limite de 5 raccourcis. Veuillez supprimer un raccourci existant avant d'en ajouter un nouveau.");
             }
-        });        
+        });
 
         const trashContainer = document.createElement("button");
         trashContainer.innerText = "Trash";

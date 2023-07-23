@@ -1,43 +1,20 @@
 const textarea = document.getElementById("prompt-textarea");
 
-const customButton = document.createElement("button");
-customButton.innerText = "Shortcuts";
-customButton.style.position = "fixed";
-customButton.style.zIndex = "9999";
-customButton.style.padding = "10px";
-customButton.style.backgroundColor = "#4e4e4e";
-customButton.style.color = "white";
-customButton.style.border = "none";
-customButton.style.borderRadius = "20px";
-customButton.style.cursor = "pointer";
-customButton.style.bottom = "100px"; // Marge inférieure
-customButton.style.left = "60px"; // Marge gauche
-customButton.style.transform = "translate(-50%, -50%)";
-document.body.appendChild(customButton);
+const openButton = document.createElement("button");
+openButton.id = "openButton"
+openButton.innerText = "Shortcuts";
+document.body.appendChild(openButton);
 
 let shortcutContainer; // Déclarer la variable en dehors de la portée de la fonction click
 let isDraggingShortcut;
 
-
-customButton.addEventListener("click", () => {
+openButton.addEventListener("click", () => {
     if (document.getElementById("rectangle")) {
         document.getElementById("rectangle").remove();
         shortcutContainer = null; // Réinitialiser la variable lorsque le rectangle est supprimé
     } else {
         const rectangle = document.createElement("div");
-        rectangle.style.position = "absolute";
-        rectangle.style.width = "200px";
-        rectangle.style.height = "300px";
-        rectangle.style.overflow = "auto";
-        rectangle.style.padding = "10px";
-        rectangle.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-        rectangle.style.display = "flex";
-        rectangle.style.flexDirection = "column";
-        rectangle.style.justifyContent = "flex-end";
-        rectangle.style.alignItems = "center";
-        rectangle.style.bottom = "40px"; // Marge inférieure
-        rectangle.style.left = "120px";
-        rectangle.style.transform = "translate(-50%, -50%)";
+        rectangle.id = "rectangle";
 
         let isDragging = false;
         let dragOffsetX = 0;
@@ -66,19 +43,12 @@ customButton.addEventListener("click", () => {
         });
 
         const closeButton = document.createElement("button");
+        closeButton.id = "closeButton";
         closeButton.innerHTML = "&#10006;"; // Utiliser le code HTML pour afficher une croix
-        closeButton.style.position = "absolute";
-        closeButton.style.top = "5px";
-        closeButton.style.right = "5px";
-        closeButton.style.backgroundColor = "transparent";
-        closeButton.style.border = "none";
-        closeButton.style.color = "white";
-        closeButton.style.fontSize = "18px";
-        closeButton.style.cursor = "pointer";
         closeButton.addEventListener("click", () => {
             rectangle.remove();
             shortcutContainer = null;
-            customButton.style.display = "block";
+            openButton.style.display = "block";
         });
 
         rectangle.appendChild(closeButton);
@@ -100,15 +70,10 @@ customButton.addEventListener("click", () => {
         buttonsContainer.style.gap = "10px";
         buttonsContainer.style.marginTop = "10px";
 
-        const addShortcut = document.createElement("button");
-        addShortcut.innerText = "Add";
-        addShortcut.style.backgroundColor = "gray";
-        addShortcut.style.color = "white";
-        addShortcut.style.width = "80px";
-        addShortcut.style.borderRadius = "20px";
-        addShortcut.style.backgroundColor = "#1ca781";
-        addShortcut.style.padding = "5px 10px";
-        addShortcut.addEventListener("click", () => {
+        const addButton = document.createElement("button");
+        addButton.id = "addButton";
+        addButton.innerText = "Add";
+        addButton.addEventListener("click", () => {
             if (shortcutContainer.children.length < 5) {
                 const addShortcutContainer = document.createElement("div");
                 addShortcutContainer.style.display = "flex";
@@ -129,24 +94,16 @@ customButton.addEventListener("click", () => {
                 buttonContainer.style.gap = "10px";
 
                 const cancelButton = document.createElement("button");
+                cancelButton.id = "cancelButton";
                 cancelButton.innerText = "Cancel";
-                cancelButton.style.width = "80px";
-                cancelButton.style.backgroundColor = "gray";
-                cancelButton.style.color = "white";
-                cancelButton.style.borderRadius = "20px";
-                cancelButton.style.padding = "5px 10px";
                 cancelButton.addEventListener("click", () => {
                     addShortcutContainer.remove();
                 });
                 buttonContainer.appendChild(cancelButton);
 
                 const confirmButton = document.createElement("button");
+                confirmButton.id = "confirmButton";
                 confirmButton.innerText = "Confirm";
-                confirmButton.style.backgroundColor = "gray";
-                confirmButton.style.color = "white";
-                confirmButton.style.width = "80px";
-                confirmButton.style.borderRadius = "20px";
-                confirmButton.style.padding = "5px 10px";
                 confirmButton.addEventListener("click", () => {
                     const shortcutName = nameInput.value;
                     const value = textarea.value;
@@ -171,23 +128,18 @@ customButton.addEventListener("click", () => {
         });
 
         const trashContainer = document.createElement("button");
+        trashContainer.id = "trashContainer";
         trashContainer.innerText = "Trash";
-        trashContainer.style.backgroundColor = "#999a9b";
-        trashContainer.style.color = "white";
-        trashContainer.style.width = "80px";
-        trashContainer.style.borderRadius = "20px";
-        trashContainer.style.backgroundColor = "#9E2626";
-        trashContainer.style.padding = "5px 10px";
         makeTrashContainerDroppable(trashContainer);
 
         rectangle.id = "rectangle";
-        buttonsContainer.appendChild(addShortcut);
+        buttonsContainer.appendChild(addButton);
         buttonsContainer.appendChild(trashContainer);
         rectangle.appendChild(shortcutContainer);
         rectangle.appendChild(buttonsContainer);
         document.body.appendChild(rectangle);
 
-        customButton.style.display = "none";
+        openButton.style.display = "none";
     }
 });
 
@@ -249,23 +201,18 @@ function makeTrashContainerDroppable(trashContainer) {
 }
 
 function createShortcutElement(buttonName, value) {
-    const newButton = document.createElement("button");
-    newButton.innerText = buttonName;
-    newButton.style.backgroundColor = "#4e4e4e";
-    newButton.style.color = "white";
-    newButton.style.padding = "5px 10px";
-    newButton.style.marginRight = "5px";
-    newButton.style.width = "180px";
-    newButton.style.borderRadius = "20px";
-    newButton.dataset.value = value; // Stocker la valeur dans l'attribut "data-value"
-    newButton.id = "button-" + Math.random().toString(36).substr(2, 9);
-    newButton.addEventListener("click", () => {
+    const newShortcut = document.createElement("button");
+    newShortcut.className = "shortcut";
+    newShortcut.innerText = buttonName;
+    newShortcut.dataset.value = value; // Stocker la valeur dans l'attribut "data-value"
+    newShortcut.id = "button-" + Math.random().toString(36).substr(2, 9);
+    newShortcut.addEventListener("click", () => {
         textarea.value = value;
     });
 
-    makeButtonDraggable(newButton);
+    makeButtonDraggable(newShortcut);
 
-    return newButton;
+    return newShortcut;
 }
 
 function createListItemElement(buttonElement) {

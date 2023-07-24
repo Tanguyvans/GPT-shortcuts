@@ -1,5 +1,6 @@
 const textarea = document.getElementById("prompt-textarea");
 
+// bouton qui ouvre application 
 const openButton = document.createElement("button");
 openButton.id = "openButton"
 openButton.innerText = "Shortcuts";
@@ -9,138 +10,134 @@ let shortcutContainer; // Déclarer la variable en dehors de la portée de la fo
 let isDraggingShortcut;
 
 openButton.addEventListener("click", () => {
-    if (document.getElementById("rectangle")) {
-        document.getElementById("rectangle").remove();
-        shortcutContainer = null; // Réinitialiser la variable lorsque le rectangle est supprimé
-    } else {
-        const rectangle = document.createElement("div");
-        rectangle.id = "rectangle";
+    let isDragging = false;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
 
-        let isDragging = false;
-        let dragOffsetX = 0;
-        let dragOffsetY = 0;
+    const rectangle = document.createElement("div");
+    rectangle.id = "rectangle";
 
-        rectangle.addEventListener("mousedown", (event) => {
-            if (!isDraggingShortcut) { // Vérifier si le raccourci n'est pas en cours de glissement
-                isDragging = true;
-                dragOffsetX = event.clientX - rectangle.offsetLeft;
-                dragOffsetY = event.clientY - rectangle.offsetTop;
-            }
-        });
-
-        document.addEventListener("mousemove", (event) => {
-            if (isDragging) {
-                const x = event.clientX - dragOffsetX;
-                const y = event.clientY - dragOffsetY;
-                rectangle.style.left = `${x}px`;
-                rectangle.style.top = `${y}px`;
-            }
-        });
-    
-        document.addEventListener("mouseup", () => {
-            isDragging = false;
-            isDraggingShortcut = false;
-        });
-
-        const closeButton = document.createElement("button");
-        closeButton.id = "closeButton";
-        closeButton.innerHTML = "&#10006;"; // Utiliser le code HTML pour afficher une croix
-        closeButton.addEventListener("click", () => {
-            rectangle.remove();
-            shortcutContainer = null;
-            openButton.style.display = "block";
-        });
-
-        rectangle.appendChild(closeButton);
-
-        if (!shortcutContainer) {
-            shortcutContainer = document.createElement("div");
-            shortcutContainer.style.gap = "10px";
-            shortcutContainer.style.display = "grid";
-            shortcutContainer.style.gridTemplateColumns = "repeat(auto-fit, minmax(150px, 1fr))";
-            loadButtons(shortcutContainer);
-
-            shortcutContainer.addEventListener("mousedown", () => {
-                isDraggingShortcut = true;
-            });
+    rectangle.addEventListener("mousedown", (event) => {
+        if (!isDraggingShortcut) { // Vérifier si le raccourci n'est pas en cours de glissement
+            isDragging = true;
+            dragOffsetX = event.clientX - rectangle.offsetLeft;
+            dragOffsetY = event.clientY - rectangle.offsetTop;
         }
+    });
 
-        const buttonsContainer = document.createElement("div");
-        buttonsContainer.style.display = "flex";
-        buttonsContainer.style.gap = "10px";
-        buttonsContainer.style.marginTop = "10px";
+    document.addEventListener("mousemove", (event) => {
+        if (isDragging) {
+            const x = event.clientX - dragOffsetX;
+            const y = event.clientY - dragOffsetY;
+            rectangle.style.left = `${x}px`;
+            rectangle.style.top = `${y}px`;
+        }
+    });
 
-        const addButton = document.createElement("button");
-        addButton.id = "addButton";
-        addButton.innerText = "Add";
-        addButton.addEventListener("click", () => {
-            if (shortcutContainer.children.length < 5) {
-                const addShortcutContainer = document.createElement("div");
-                addShortcutContainer.style.display = "flex";
-                addShortcutContainer.style.flexDirection = "column";
-                addShortcutContainer.style.gap = "10px";
-                addShortcutContainer.style.alignItems = "center";
+    document.addEventListener("mouseup", () => {
+        isDragging = false;
+        isDraggingShortcut = false;
+    });
 
-                const nameInput = document.createElement("input");
-                nameInput.type = "text";
-                nameInput.style.color = "black";
-                nameInput.placeholder = "Enter a name";
-                nameInput.style.width = "180px";
-                nameInput.style.marginTop = "10px";
-                addShortcutContainer.appendChild(nameInput);
+    const closeButton = document.createElement("button");
+    closeButton.id = "closeButton";
+    closeButton.innerHTML = "&#10006;"; // Utiliser le code HTML pour afficher une croix
+    closeButton.addEventListener("click", () => {
+        rectangle.remove();
+        shortcutContainer = null;
+        openButton.style.display = "block";
+    });
 
-                const buttonContainer = document.createElement("div");
-                buttonContainer.style.display = "flex";
-                buttonContainer.style.gap = "10px";
+    rectangle.appendChild(closeButton);
 
-                const cancelButton = document.createElement("button");
-                cancelButton.id = "cancelButton";
-                cancelButton.innerText = "Cancel";
-                cancelButton.addEventListener("click", () => {
-                    addShortcutContainer.remove();
-                });
-                buttonContainer.appendChild(cancelButton);
+    if (!shortcutContainer) {
+        shortcutContainer = document.createElement("div");
+        shortcutContainer.id = "shortcutContainer";
+        loadButtons(shortcutContainer);
 
-                const confirmButton = document.createElement("button");
-                confirmButton.id = "confirmButton";
-                confirmButton.innerText = "Confirm";
-                confirmButton.addEventListener("click", () => {
-                    const shortcutName = nameInput.value;
-                    const value = textarea.value;
-                    if (shortcutName !== "") {
-                        const newShortcut = createShortcutElement(shortcutName, value);
-                        const listItem = createListItemElement(newShortcut);
-                        shortcutContainer.appendChild(listItem);
-                        saveShortcuts(shortcutContainer);
-                        addShortcutContainer.remove();
-                    } else {
-                        alert("Please enter a name for the shortcut.");
-                    }
-                });
-                buttonContainer.appendChild(confirmButton);
-
-                addShortcutContainer.appendChild(buttonContainer);
-
-                rectangle.appendChild(addShortcutContainer);
-            } else {
-                alert("Vous avez atteint la limite de 5 raccourcis. Veuillez supprimer un raccourci existant avant d'en ajouter un nouveau.");
-            }
+        shortcutContainer.addEventListener("mousedown", () => {
+            isDraggingShortcut = true;
         });
-
-        const trashContainer = document.createElement("button");
-        trashContainer.id = "trashContainer";
-        trashContainer.innerText = "Trash";
-        makeTrashContainerDroppable(trashContainer);
-
-        rectangle.id = "rectangle";
-        buttonsContainer.appendChild(addButton);
-        buttonsContainer.appendChild(trashContainer);
-        rectangle.appendChild(shortcutContainer);
-        rectangle.appendChild(buttonsContainer);
-        document.body.appendChild(rectangle);
-
-        openButton.style.display = "none";
     }
+
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.style.display = "flex";
+    buttonsContainer.style.gap = "10px";
+    buttonsContainer.style.marginTop = "10px";
+
+    const addButton = document.createElement("button");
+    addButton.id = "addButton";
+    addButton.innerText = "Add";
+
+    var addingShortcut = false;
+    addButton.addEventListener("click", () => {
+        if (shortcutContainer.children.length < 5 && !addingShortcut) {
+            addingShortcut = true;
+            const addShortcutContainer = document.createElement("div");
+            addShortcutContainer.style.display = "flex";
+            addShortcutContainer.style.flexDirection = "column";
+            addShortcutContainer.style.gap = "10px";
+            addShortcutContainer.style.alignItems = "center";
+
+            const shortcutNameInput = document.createElement("input");
+            shortcutNameInput.id = "shortcutNameInput";
+            shortcutNameInput.type = "text";
+            shortcutNameInput.placeholder = "Enter a name";
+            addShortcutContainer.appendChild(shortcutNameInput);
+
+            const buttonContainer = document.createElement("div");
+            buttonContainer.style.display = "flex";
+            buttonContainer.style.gap = "10px";
+
+            const cancelButton = document.createElement("button");
+            cancelButton.id = "cancelButton";
+            cancelButton.innerText = "Cancel";
+            cancelButton.addEventListener("click", () => {
+                addShortcutContainer.remove();
+                addingShortcut = false;
+            });
+            buttonContainer.appendChild(cancelButton);
+
+            const confirmButton = document.createElement("button");
+            confirmButton.id = "confirmButton";
+            confirmButton.innerText = "Confirm";
+            confirmButton.addEventListener("click", () => {
+                const shortcutName = shortcutNameInput.value;
+                const value = textarea.value;
+                if (shortcutName !== "") {
+                    const newShortcut = createShortcutElement(shortcutName, value);
+                    const listItem = createListItemElement(newShortcut);
+                    shortcutContainer.appendChild(listItem);
+                    saveShortcuts(shortcutContainer);
+                    addShortcutContainer.remove();
+                    addingShortcut = false;
+                } else {
+                    alert("Please enter a name for the shortcut.");
+                }
+            });
+            buttonContainer.appendChild(confirmButton);
+
+            addShortcutContainer.appendChild(buttonContainer);
+
+            rectangle.appendChild(addShortcutContainer);
+        } else if (!addingShortcut) {
+            alert("Vous avez atteint la limite de 5 raccourcis. Veuillez supprimer un raccourci existant avant d'en ajouter un nouveau.");
+        }
+    });
+
+    const trashContainer = document.createElement("button");
+    trashContainer.id = "trashContainer";
+    trashContainer.innerText = "Trash";
+    makeTrashContainerDroppable(trashContainer);
+
+    rectangle.id = "rectangle";
+    buttonsContainer.appendChild(addButton);
+    buttonsContainer.appendChild(trashContainer);
+    rectangle.appendChild(shortcutContainer);
+    rectangle.appendChild(buttonsContainer);
+    document.body.appendChild(rectangle);
+
+    openButton.style.display = "none";
 });
 
 async function saveShortcuts(shortcutContainer) {

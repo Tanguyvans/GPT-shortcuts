@@ -13,9 +13,10 @@
     {
       "matches": ["https://chat.openai.com/*"],
       "js": ["content.js"],
-      "css": ["styles.css"]
+      "css": [
+        "styles.css"
+      ]
     }
   ],
-
   "host_permissions": ["https://chat.openai.com/*"]
 }

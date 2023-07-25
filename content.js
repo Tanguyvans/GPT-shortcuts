@@ -169,7 +169,7 @@ openButton.addEventListener("click", () => {
 
 async function saveShortcuts(shortcutContainer) {
     const buttons = Array.from(shortcutContainer.children)
-        .slice(0, 5) // Limite le nombre de raccourcis à 10
+        .slice(0, maxShortcut) // Limite le nombre de raccourcis à 10
         .map((listItem) => {
             const buttonName = listItem.firstChild.innerText;
             const value = listItem.firstChild.dataset.value;

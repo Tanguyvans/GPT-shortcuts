@@ -16,8 +16,8 @@
 
 #openButton {
     position: fixed;
-    bottom: 100px;
-    left: 60px;
+    bottom: 50px;
+    left: 50px;
     width: 40px;
     height: 40px;
     background-color: #3498db; /* Couleur de fond */
@@ -91,13 +91,35 @@
 }
 
 .shortcut {
-    background-color: #4e4e4e;
-    color: white;
+    background-color: #3273dc;
+    color: #ffffff;
     padding: 5px 10px;
     margin-right: 5px;
     width: 160px;
     border-radius: 20px;
+    pointer-events: auto;
+    transition: background-color 0.2s ease;
 }
+
+.shortcut:hover {
+    background-color: #0056b3; /* Nuance de bleu plus sombre au survol */
+}
+
+.shortcut.dragging {
+    opacity: 0.5; /* Opacité réduite lors du glissement */
+    transform: scale(0.95); /* Légère réduction de la taille lors du glissement */
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+#tooltip {
+    display: none;
+    position: absolute;
+    background-color: #000;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    z-index: 1;
+  }
 
 #shortcutNameInput {
     color: black;

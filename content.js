@@ -9,6 +9,8 @@ let shortcutContainer; // Déclarer la variable en dehors de la portée de la fo
 let isDraggingShortcut;
 var maxShortcut = 10;
 
+createTooltip();
+
 openButton.addEventListener("click", () => {
     let isDragging = false;
     let dragOffsetX = 0;
@@ -98,7 +100,7 @@ openButton.addEventListener("click", () => {
             const cancelIcon = document.createElement("img");
             cancelIcon.style.width = "32px";
             cancelIcon.style.height = "32px";
-            cancelIcon.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABPklEQVR4nO2YS07DMBRFvRwYdAtAO+A7ohSYAcNSShmyZBYApRW/gyIaKUrsyBAn2NE949i5R5aT954xQgghhBAiOoABcBlwvxEwDLWf70u3gSfgA7gOsN8O8AwsO5MpSOR8NpEBdoGXwn5LYC9savuLLzYnQVMZYB94Le31BczbSW+XebcEmAaQeGg3fTXIuUPm1mPtAbCyrF10k74aaAK8WQLNatYcRiXxF5loJXKAM4fMXeGZI4fEvYkJ4ARYW4LOk5HIAU4dJ1N7WlECHFtOpnJKJgVwy6Qj0RsR7Jc+jUveq8sOjF2Bk/n84v4hzlL6q0+SL1H4kfhVBVxT+XZbvnuU8VPPXuT/ZbA3VlmXeNOwscp4bDd931pdYKs0fGg0SdlMULofPpRkMokrk+I4qFcDOiGEEEIIYXz4BtnffLYImZRxAAAAAElFTkSuQmCC";
+            cancelIcon.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAABUElEQVR4nO2aQVIDIRBF2eqx1FMl7lI1m5zCmCuYg+RAPgvDIlZpgJkmI/R/69R8/ofuzAAhCCGEEEIIIYQQVQCPwCtwAt6B59AY4CVpRc0t8NBa85b5Mz/5BHahEfHZSeOa8yohcJn5v5ga6E039LbWelnSEuQeIWTMR05WWsWkOsyxN1r2Od6W6lQTG94v9Wi6EgpmnjSGp7AGlM3OrBAKzdOy6VqHsF/zmU3BcMDdmbcceLfmLQx0b36JkWHMz+jgU81vQ09QPqvjzHyjEPo0bxRC3+YXhjCG+ZkhjGU+eA8AzyWA5yaI579BPL8IUfFuP+J3wK7W0DAh4PlzGM8bInjeEsPzpiiet8W5nNL6PRgBjv/oaOxg46oCHY7yfTnBfNnPLIeNtV6WeCnB9QWJqxDiSviIdXiPZpROpQ9Jc7OaeSGEEEIIIYQQoV++AK+JIVq/iweNAAAAAElFTkSuQmCC";
 
             const cancelButton = document.createElement("div");
             cancelButton.id = "cancelButton";
@@ -114,7 +116,7 @@ openButton.addEventListener("click", () => {
             const confirmIcon = document.createElement("img");
             confirmIcon.style.width = "32px";
             confirmIcon.style.height = "32px";
-            confirmIcon.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAg0lEQVR4nO2VSwqAMAwFewlF738SVyLVjV14nBGxiPhDaxsUMtBlMyTktcYoihIAkAMdUBlhqWOmkZJmQO+lA1CoNBo63m+PF6iBdspeYE7dk7sLgH1SIIr0ZGSlkdpebsiTRYYLefKcciAXexzYL8/7RbrLpku5X2bVufUnbaeK8ltGm2Ohj3n7PAMAAAAASUVORK5CYII=";
+            confirmIcon.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA+0lEQVR4nO2XQQoCMQxFcwn1GIouRs8l7lzqkfRQDooXkCeFVmEQnWnVpJC3LUzeT2mbEXEcx3EcYwATYAPsgJXUBNAALU9uwFYqkr/ymm3N8mknllKpfGInFcsH1lKx/AkYiRWABXDpKR9CNmIFl9fCOz+UMIcA+ziXjP9021y/cmDD0x1fv0Sb82FN+eICWvKrTuezCqnIB+IMXlRQTT4QD2x2YVX5QLhtOj8UvQXU5RPAHDgPEFmae6QY3k39zhfuhC35H4TQG4kpD6E/z5MfQl++IIQd+YwQ9uQHhLAr3yOEffk3IeqRTwAz4AgcgOljwXEcx3Ec+cgdYsj2234RUD8AAAAASUVORK5CYII=";
 
             const confirmButton = document.createElement("div");
             confirmButton.id = "confirmButton";
@@ -196,7 +198,13 @@ function makeButtonDraggable(buttonElement) {
             event.preventDefault(); // Empêcher le déclenchement de l'événement de déplacement
             return;
         }
-        event.dataTransfer.setData("text/plain", buttonElement.id); // Définir l'ID de l'élément en cours de déplacement
+        hideTooltip();
+        event.dataTransfer.setData("text/plain", buttonElement.id);
+        buttonElement.classList.add("dragging");
+    });
+
+    buttonElement.addEventListener("dragend", () => {
+        buttonElement.classList.remove("dragging"); // Supprimer la classe "dragging" lorsque le glissement est terminé
     });
 }
 
@@ -225,6 +233,7 @@ function makeTrashContainerDroppable(trashContainer) {
 }
 
 function createShortcutElement(buttonName, value) {
+    
     const newShortcut = document.createElement("button");
     newShortcut.className = "shortcut";
     newShortcut.innerText = buttonName;
@@ -233,6 +242,13 @@ function createShortcutElement(buttonName, value) {
     newShortcut.addEventListener("click", () => {
         textarea.value = value;
     });
+
+    newShortcut.addEventListener("mouseover", (event) => {
+        showTooltip(value, event.clientX, event.clientY);
+    });
+
+    // Ajouter un événement lorsque la souris quitte le bouton pour masquer l'infobulle
+    newShortcut.addEventListener("mouseout", hideTooltip);
 
     makeButtonDraggable(newShortcut);
 
@@ -246,4 +262,30 @@ function createListItemElement(buttonElement) {
     listItem.id = "button-" + Math.random().toString(36).substr(2, 9);
     makeButtonDraggable(listItem);
     return listItem;
+}
+
+function createTooltip() {
+    const tooltip = document.createElement("div");
+    tooltip.id = "tooltip";
+    document.body.appendChild(tooltip);
+}
+
+function showTooltip(content, x, y) {
+    const tooltip = document.getElementById("tooltip");
+    const words = content.split(" ");
+    const maxWords = 7;
+    const truncatedValue = words.slice(0, maxWords).join(" ");
+    tooltip.textContent = truncatedValue;
+    if (truncatedValue){
+        tooltip.style.display = "block";
+        // Positionner l'infobulle près du bouton
+        tooltip.style.top = y + "px";
+        tooltip.style.left = x + "px";
+    }
+}
+
+// Fonction pour masquer l'infobulle
+function hideTooltip() {
+    const tooltip = document.getElementById("tooltip");
+    tooltip.style.display = "none";
 }

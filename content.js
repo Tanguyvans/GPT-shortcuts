@@ -27,8 +27,57 @@ openButton.addEventListener("click", () => {
         }
     });
 
+    const resizeHandle = document.createElement("div");
+    resizeHandle.id = "resizeHandle";
+    rectangle.appendChild(resizeHandle);
+      
+    let isResizing = false;
+    let original_width = 0;
+    let original_height = 0;
+    let original_x = 0;
+    let original_y = 0;
+    let original_mouse_x = 0;
+    let original_mouse_y = 0;
+      
+    resizeHandle.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        original_width = parseFloat(getComputedStyle(rectangle, null).getPropertyValue('width').replace('px', ''));
+        original_height = parseFloat(getComputedStyle(rectangle, null).getPropertyValue('height').replace('px', ''));
+        original_x = rectangle.getBoundingClientRect().left;
+        original_y = rectangle.getBoundingClientRect().top;
+        original_mouse_x = event.pageX;
+        original_mouse_y = event.pageY;
+        isResizing = true;
+        window.addEventListener('mousemove', resize);
+        window.addEventListener('mouseup', stopResize);
+    });
+
+    function resize(e) {
+        const width = original_width + (e.pageX - original_mouse_x);
+        const height = original_height + (e.pageY - original_mouse_y);
+        if (width > 200) {
+          rectangle.style.width = width + 'px';
+        }
+        if (height > 300) {
+          rectangle.style.height = height + 'px';
+        }
+    }
+    
+    function stopResize() {
+        window.removeEventListener('mousemove', resize);
+    }
+      
     document.addEventListener("mousemove", (event) => {
-        if (isDragging) {
+        if (isResizing) {
+            // const width = original_width + (event.pageX - original_mouse_x);
+            // const height = original_height + (event.pageY - original_mouse_y);
+            // if (width > 200) {
+            //     rectangle.style.width = width + 'px';
+            // }
+            // if (height > 300) {
+            //     rectangle.style.height = height + 'px';
+            // }
+        }else if (isDragging) {
             const x = event.clientX - dragOffsetX;
             const y = event.clientY - dragOffsetY;
             rectangle.style.left = `${x}px`;
@@ -39,6 +88,7 @@ openButton.addEventListener("click", () => {
     document.addEventListener("mouseup", () => {
         isDragging = false;
         isDraggingShortcut = false;
+        isResizing = false;
     });
 
     const closeButton = document.createElement("img");

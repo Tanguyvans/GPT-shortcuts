@@ -14,6 +14,16 @@
     transform: translate(-50%, -50%);
 }
 
+#resizeHandle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #0072C6; /* Couleur d'OpenAI */
+    bottom: 0;
+    right: 0;
+    cursor: nwse-resize;
+}
+
 #openButton {
     position: fixed;
     bottom: 50px;

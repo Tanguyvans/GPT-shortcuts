@@ -77,7 +77,6 @@ openButton.addEventListener("click", () => {
         });
     });
       
-      
     document.addEventListener("mousemove", (event) => {
         if (isResizing) {
             const diffX = event.clientX - startX;
@@ -126,6 +125,7 @@ openButton.addEventListener("click", () => {
             rectangle.style.left = `${x}px`;
             rectangle.style.top = `${y}px`;
         }
+        updateShortcutColumns(shortcutContainer, rectangle);
     });
 
     document.addEventListener("mouseup", () => {
@@ -156,11 +156,10 @@ openButton.addEventListener("click", () => {
             isDraggingShortcut = true;
         });
     }
+    updateShortcutColumns(shortcutContainer, rectangle);
 
     const buttonsContainer = document.createElement("div");
-    buttonsContainer.style.display = "flex";
-    buttonsContainer.style.gap = "10px";
-    buttonsContainer.style.marginTop = "10px";
+    buttonsContainer.id = "buttonContainer";
 
     const addIcon = document.createElement("img");
     addIcon.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAQElEQVR4nO3SwQkAQAgDwfTfdO6TAnwoIrdTgARWCbjMwQCRYIt5wiCBpp6r250BVWOHqxhgEoS2mAH+PQGgBg8ZRU7A5GWOeQAAAABJRU5ErkJggg==";
@@ -383,3 +382,14 @@ function hideTooltip() {
     const tooltip = document.getElementById("tooltip");
     tooltip.style.display = "none";
 }
+
+function updateShortcutColumns(shortcutContainer, rectangle) {
+    const rectangleWidth = rectangle.clientWidth;
+    if (rectangleWidth >= 400) {
+      // Afficher deux colonnes de shortcuts lorsque la largeur du rectangle est d'au moins 500px
+      shortcutContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
+    } else {
+      // Afficher une colonne de shortcuts pour les autres tailles du rectangle
+      shortcutContainer.style.gridTemplateColumns = 'repeat(auto-fit, minmax(150px, 1fr))';
+    }
+  }

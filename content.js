@@ -16,7 +16,7 @@ openButton.addEventListener("click", () => {
     let dragOffsetX = 0;
     let dragOffsetY = 0;
 
-    const rectangle = document.createElement("div");
+    const   rectangle = document.createElement("div");
     rectangle.id = "rectangle";
 
     rectangle.addEventListener("mousedown", (event) => {
@@ -27,57 +27,100 @@ openButton.addEventListener("click", () => {
         }
     });
 
-    const resizeHandle = document.createElement("div");
-    resizeHandle.id = "resizeHandle";
-    rectangle.appendChild(resizeHandle);
-      
-    let isResizing = false;
-    let original_width = 0;
-    let original_height = 0;
-    let original_x = 0;
-    let original_y = 0;
-    let original_mouse_x = 0;
-    let original_mouse_y = 0;
-      
-    resizeHandle.addEventListener("mousedown", (event) => {
-        event.preventDefault();
-        original_width = parseFloat(getComputedStyle(rectangle, null).getPropertyValue('width').replace('px', ''));
-        original_height = parseFloat(getComputedStyle(rectangle, null).getPropertyValue('height').replace('px', ''));
-        original_x = rectangle.getBoundingClientRect().left;
-        original_y = rectangle.getBoundingClientRect().top;
-        original_mouse_x = event.pageX;
-        original_mouse_y = event.pageY;
-        isResizing = true;
-        window.addEventListener('mousemove', resize);
-        window.addEventListener('mouseup', stopResize);
-    });
-
-    function resize(e) {
-        const width = original_width + (e.pageX - original_mouse_x);
-        const height = original_height + (e.pageY - original_mouse_y);
-        if (width > 200) {
-          rectangle.style.width = width + 'px';
-        }
-        if (height > 300) {
-          rectangle.style.height = height + 'px';
-        }
-    }
+    const createResizeHandle = (className) => {
+        const resizeHandle = document.createElement("div");
+        resizeHandle.className = className;
+        rectangle.appendChild(resizeHandle);
+        return resizeHandle;
+    };
     
-    function stopResize() {
-        window.removeEventListener('mousemove', resize);
-    }
+    const resize_se = createResizeHandle("resize_c");
+    resize_se.id = "resize_se";
+    
+    const resize_e = createResizeHandle("resize_ew");
+    resize_e.id = "resize_e";
+    
+    const resize_w = createResizeHandle("resize_ew");
+    resize_w.id = "resize_w";
+    
+    const resize_nw = createResizeHandle("resize_c");
+    resize_nw.id = "resize_nw";
+    
+    const resize_sw = createResizeHandle("resize_c");
+    resize_sw.id = "resize_sw";
+    
+    const resize_ne = createResizeHandle("resize_c");
+    resize_ne.id = "resize_ne";
+    
+    const resize_n = createResizeHandle("resize_ns");
+    resize_n.id = "resize_n";
+    
+    const resize_s = createResizeHandle("resize_ns");
+    resize_s.id = "resize_s";
+    
+    let isResizing = false;
+    let resizeHandleClicked = null;
+    let startWidth, startHeight, startX, startY;
+    
+    const resizeHandles = [resize_se, resize_e, resize_w, resize_nw, resize_sw, resize_ne, resize_n, resize_s];
+      
+    resizeHandles.forEach((handle) => {
+        handle.addEventListener("mousedown", (event) => {
+            isResizing = true;
+            resizeHandleClicked = handle;
+            startX = event.clientX;
+            startY = event.clientY;
+            startWidth = parseInt(document.defaultView.getComputedStyle(rectangle).width, 10);
+            startHeight = parseInt(document.defaultView.getComputedStyle(rectangle).height, 10);
+            startTop = parseInt(document.defaultView.getComputedStyle(rectangle).top, 10);
+            startLeft = parseInt(document.defaultView.getComputedStyle(rectangle).left, 10);
+        });
+    });
+      
       
     document.addEventListener("mousemove", (event) => {
         if (isResizing) {
-            // const width = original_width + (event.pageX - original_mouse_x);
-            // const height = original_height + (event.pageY - original_mouse_y);
-            // if (width > 200) {
-            //     rectangle.style.width = width + 'px';
-            // }
-            // if (height > 300) {
-            //     rectangle.style.height = height + 'px';
-            // }
-        }else if (isDragging) {
+            const diffX = event.clientX - startX;
+            const diffY = event.clientY - startY;
+    
+            let newWidth = startWidth;
+            let newHeight = startHeight;
+            let newLeft = startLeft;
+            let newTop = startTop;
+    
+            if (resizeHandleClicked === resize_se) {
+                newWidth = Math.max(startWidth + diffX, 200);
+                newHeight = Math.max(startHeight + diffY, 300);
+            } else if (resizeHandleClicked === resize_e) {
+                newWidth = Math.max(startWidth + diffX, 200);
+            } else if (resizeHandleClicked === resize_w) {
+                newWidth = Math.max(startWidth - diffX, 200);
+                newLeft = startLeft + (startWidth - newWidth);
+            } else if (resizeHandleClicked === resize_nw) {
+                newWidth = Math.max(startWidth - diffX, 200);
+                newHeight = Math.max(startHeight - diffY, 300);
+                newLeft = startLeft + (startWidth - newWidth);
+                newTop = startTop + (startHeight - newHeight);
+            } else if (resizeHandleClicked === resize_sw) {
+                newWidth = Math.max(startWidth - diffX, 200);
+                newHeight = Math.max(startHeight + diffY, 300);
+                newLeft = startLeft + (startWidth - newWidth);
+            } else if (resizeHandleClicked === resize_ne) {
+                newWidth = Math.max(startWidth + diffX, 200);
+                newHeight = Math.max(startHeight - diffY, 300);
+                newTop = startTop + (startHeight - newHeight);
+            } else if (resizeHandleClicked === resize_n) {
+                newHeight = Math.max(startHeight - diffY, 300);
+                newTop = startTop + (startHeight - newHeight);
+            } else if (resizeHandleClicked === resize_s) {
+                newHeight = Math.max(startHeight + diffY, 300);
+            }
+    
+            rectangle.style.width = `${newWidth}px`;
+            rectangle.style.height = `${newHeight}px`;
+            rectangle.style.left = `${newLeft}px`;
+            rectangle.style.top = `${newTop}px`;
+        } else if (isDragging) {
             const x = event.clientX - dragOffsetX;
             const y = event.clientY - dragOffsetY;
             rectangle.style.left = `${x}px`;
@@ -89,6 +132,7 @@ openButton.addEventListener("click", () => {
         isDragging = false;
         isDraggingShortcut = false;
         isResizing = false;
+        resizeHandleClicked = null;
     });
 
     const closeButton = document.createElement("img");

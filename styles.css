@@ -169,7 +169,7 @@
 }
 
 #shortcutContainer {
-    gap: 10px;
+    gap: 5px;
     display: grid;
     overflow-x: hidden;
     overflow-y: auto;
@@ -182,7 +182,7 @@
     min-width: 150px;
     height: 40px;
     margin: 5px;
-    padding: 10px;
+    padding: 5px;
     background-color: #007bff;
     color: #fff;
     border: none;

@@ -1,4 +1,4 @@
-const textarea = document.getElementById("prompt-textarea");
+let textarea = document.getElementById('prompt-textarea');
 
 const openButton = document.createElement("img");
 openButton.src = "data:image/png;base64,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";
@@ -8,6 +8,8 @@ document.body.appendChild(openButton);
 let shortcutContainer; // Déclarer la variable en dehors de la portée de la fonction click
 let isDraggingShortcut;
 var maxShortcut = 10;
+
+const mutationObserver = createMutationObserver();
 
 createTooltip();
 
@@ -35,25 +37,10 @@ openButton.addEventListener("click", () => {
     };
     
     const resize_se = createResizeHandle("resize_c");
-    resize_se.id = "resize_se";
+    resize_se.id = "resize_sw";
     
     const resize_e = createResizeHandle("resize_ew");
-    resize_e.id = "resize_e";
-    
-    const resize_w = createResizeHandle("resize_ew");
-    resize_w.id = "resize_w";
-    
-    const resize_nw = createResizeHandle("resize_c");
-    resize_nw.id = "resize_nw";
-    
-    const resize_sw = createResizeHandle("resize_c");
-    resize_sw.id = "resize_sw";
-    
-    const resize_ne = createResizeHandle("resize_c");
-    resize_ne.id = "resize_ne";
-    
-    const resize_n = createResizeHandle("resize_ns");
-    resize_n.id = "resize_n";
+    resize_e.id = "resize_w";
     
     const resize_s = createResizeHandle("resize_ns");
     resize_s.id = "resize_s";
@@ -62,7 +49,7 @@ openButton.addEventListener("click", () => {
     let resizeHandleClicked = null;
     let startWidth, startHeight, startX, startY;
     
-    const resizeHandles = [resize_se, resize_e, resize_w, resize_nw, resize_sw, resize_ne, resize_n, resize_s];
+    const resizeHandles = [resize_se, resize_e, resize_s];
       
     resizeHandles.forEach((handle) => {
         handle.addEventListener("mousedown", (event) => {
@@ -92,25 +79,6 @@ openButton.addEventListener("click", () => {
                 newHeight = Math.max(startHeight + diffY, 300);
             } else if (resizeHandleClicked === resize_e) {
                 newWidth = Math.max(startWidth + diffX, 200);
-            } else if (resizeHandleClicked === resize_w) {
-                newWidth = Math.max(startWidth - diffX, 200);
-                newLeft = startLeft + (startWidth - newWidth);
-            } else if (resizeHandleClicked === resize_nw) {
-                newWidth = Math.max(startWidth - diffX, 200);
-                newHeight = Math.max(startHeight - diffY, 300);
-                newLeft = startLeft + (startWidth - newWidth);
-                newTop = startTop + (startHeight - newHeight);
-            } else if (resizeHandleClicked === resize_sw) {
-                newWidth = Math.max(startWidth - diffX, 200);
-                newHeight = Math.max(startHeight + diffY, 300);
-                newLeft = startLeft + (startWidth - newWidth);
-            } else if (resizeHandleClicked === resize_ne) {
-                newWidth = Math.max(startWidth + diffX, 200);
-                newHeight = Math.max(startHeight - diffY, 300);
-                newTop = startTop + (startHeight - newHeight);
-            } else if (resizeHandleClicked === resize_n) {
-                newHeight = Math.max(startHeight - diffY, 300);
-                newTop = startTop + (startHeight - newHeight);
             } else if (resizeHandleClicked === resize_s) {
                 newHeight = Math.max(startHeight + diffY, 300);
             }
@@ -262,6 +230,24 @@ openButton.addEventListener("click", () => {
     openButton.style.display = "none";
 });
 
+function createMutationObserver() {
+    const observer = new MutationObserver(function(mutationsList, observer) {
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                textarea = document.getElementById('prompt-textarea');
+                console.log('Changement dans le DOM détecté. Ajout du bouton...');
+            }
+        }
+    });
+
+    const targetNode = document.body;
+    const config = { childList: true, subtree: true };
+
+    observer.observe(targetNode, config);
+
+    return observer;
+}
+
 async function saveShortcuts(shortcutContainer) {
     const buttons = Array.from(shortcutContainer.children)
         .slice(0, maxShortcut) // Limite le nombre de raccourcis à 10
@@ -333,7 +319,7 @@ function createShortcutElement(buttonName, value) {
     newShortcut.dataset.value = value; // Stocker la valeur dans l'attribut "data-value"
     newShortcut.id = "button-" + Math.random().toString(36).substr(2, 9);
     newShortcut.addEventListener("click", () => {
-        textarea.value = value;
+        simulateTyping(value);
     });
 
     newShortcut.addEventListener("mouseover", (event) => {
@@ -392,4 +378,16 @@ function updateShortcutColumns(shortcutContainer, rectangle) {
       // Afficher une colonne de shortcuts pour les autres tailles du rectangle
       shortcutContainer.style.gridTemplateColumns = 'repeat(auto-fit, minmax(150px, 1fr))';
     }
-  }
+}
+
+function simulateTyping(text) {
+    textarea.value = '';
+    var inputEvent = new Event('input', {
+        bubbles: true,
+        cancelable: true,
+    });
+    for (let i = 0; i < text.length; i++) {
+        textarea.value += text[i];
+        textarea.dispatchEvent(inputEvent);
+    }
+}

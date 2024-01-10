@@ -1,6 +1,6 @@
 **Privacy Policy for GPT Shortcuts Chrome Extension**
 
-_Last updated: [01/10/2023]_
+\_Last updated: 01/10/2023
 
 The GPT Shortcuts Chrome extension is committed to protecting user privacy. This policy outlines how user data is handled.
 
